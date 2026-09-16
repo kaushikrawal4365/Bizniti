@@ -181,7 +181,7 @@ export default async function InsightDetail({ params }: { params: Promise<{ slug
               <h3 className="text-xl font-bold text-[var(--ink)] mt-0.5">{article.author.name}</h3>
               <p className="text-xs font-medium text-[var(--blue)]">{article.author.role}</p>
               <p className="mt-2 text-sm leading-6 text-black/60">
-                Vish Nath advises growing brands on digital strategy, search, performance marketing systems, and high-converting web experiences.
+                Vish Nath (Placeholder profile) advises growing brands on digital strategy, search, performance marketing systems, and high-converting web experiences.
               </p>
             </div>
             <a

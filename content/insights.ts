@@ -28,7 +28,7 @@ export const insights: InsightArticle[] = [
     readTime: '4 min read',
     date: 'September 14, 2026',
     author: {
-      name: 'Vish Nath',
+      name: 'Vish Nath (Placeholder)',
       role: 'Founder & Growth Strategist',
     },
     takeaway: 'Stop treating digital as a collection of isolated campaigns. Alignment between brand proposition, technical infrastructure, and customer intent is what drives compounding growth.',
@@ -49,7 +49,7 @@ export const insights: InsightArticle[] = [
       {
         type: 'quote',
         text: 'Good businesses don’t need more noise. They need a clearer way forward that connects positioning to customer conversion.',
-        author: 'Vish Nath',
+        author: 'Vish Nath (Placeholder)',
       },
       {
         type: 'heading',
@@ -77,7 +77,7 @@ export const insights: InsightArticle[] = [
     readTime: '5 min read',
     date: 'August 28, 2026',
     author: {
-      name: 'Vish Nath',
+      name: 'Vish Nath (Placeholder)',
       role: 'Founder & Growth Strategist',
     },
     takeaway: 'Content strategy should solve problems, build trust, and lower buying friction—not just chase search impressions that never convert into pipeline.',
@@ -98,7 +98,7 @@ export const insights: InsightArticle[] = [
       {
         type: 'quote',
         text: 'Your prospective clients don’t want generic advice. They want sharp, actionable perspectives from people who have solved their specific problem.',
-        author: 'Vish Nath',
+        author: 'Vish Nath (Placeholder)',
       },
       {
         type: 'heading',
@@ -122,7 +122,7 @@ export const insights: InsightArticle[] = [
     readTime: '6 min read',
     date: 'August 10, 2026',
     author: {
-      name: 'Vish Nath',
+      name: 'Vish Nath (Placeholder)',
       role: 'Founder & Growth Strategist',
     },
     takeaway: 'Your website is your primary digital asset. Treat it as a continuous growth product rather than a static digital brochure updated every 3 years.',
@@ -143,7 +143,7 @@ export const insights: InsightArticle[] = [
       {
         type: 'quote',
         text: 'Every millisecond of latency and every point of cognitive friction cost customer trust. Design with clarity, build with precision.',
-        author: 'Vish Nath',
+        author: 'Vish Nath (Placeholder)',
       },
       {
         type: 'heading',
