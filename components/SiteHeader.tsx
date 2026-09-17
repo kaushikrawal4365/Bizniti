@@ -43,17 +43,17 @@ export function SiteHeader() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3 sm:px-5">
-      <div className="relative mx-auto max-w-[1480px] rounded-2xl border border-white/70 bg-[#f8f7f2]/78 shadow-[0_16px_50px_rgba(5,16,36,.09)] backdrop-blur-2xl">
+      <div 
+        className="relative mx-auto max-w-[1480px] rounded-2xl border border-white/70 bg-[#f8f7f2]/78 shadow-[0_16px_50px_rgba(5,16,36,.09)] backdrop-blur-2xl"
+        onMouseLeave={closeDropdown}
+      >
         <div className="flex h-[62px] items-center justify-between px-3 sm:px-4">
           <Link href="/" aria-label="BizNiti home">
             <Logo />
           </Link>
 
           {/* ── Desktop nav with iOS-style liquid layoutId pill animation ── */}
-          <nav 
-            className="relative hidden items-center gap-1 rounded-xl bg-black/[0.03] p-1 border border-black/5 md:flex" 
-            onMouseLeave={closeDropdown}
-          >
+          <nav className="hidden items-center gap-1 rounded-xl bg-black/[0.03] p-1 border border-black/5 md:flex">
             {navItems.map((item) => {
               return (
                 <div key={item.id} className="relative">
@@ -92,58 +92,6 @@ export function SiteHeader() {
                 </div>
               );
             })}
-
-            {/* ── Services Mega Dropdown (Centered under Desktop Nav Container) ── */}
-            {servicesOpen && (
-              <div
-                className="dropdown-enter dropdown-panel absolute left-1/2 top-[calc(100%+12px)] z-50 w-[min(780px,calc(100vw-32px))] max-h-[calc(100vh-90px)] -translate-x-1/2 overflow-y-auto rounded-[28px] border border-black/10 bg-[#fcfcf9] p-4 shadow-[0_28px_80px_rgba(5,16,36,0.22)]"
-                onMouseEnter={openDropdown}
-                onMouseLeave={closeDropdown}
-              >
-                <div className="absolute -top-3 left-0 right-0 h-3" />
-                <div className="grid grid-cols-1 md:grid-cols-[.65fr_1.35fr] gap-3">
-                  <div className="flex flex-col justify-between rounded-2xl bg-[var(--ink)] p-5 text-white relative overflow-hidden">
-                    <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--blue)]/30 blur-2xl pointer-events-none" />
-                    <div className="relative z-10">
-                      <span className="mono text-[9px] text-white/50">Capabilities / 07</span>
-                      <h3 className="display mt-3 text-3xl sm:text-4xl leading-[.92]">Build the next move.</h3>
-                      <p className="mt-3 text-xs leading-5 text-white/65">
-                        From digital foundations to demand generation and strategic leadership.
-                      </p>
-                    </div>
-                    <Link
-                      href="/services"
-                      onClick={() => setServicesOpen(false)}
-                      className="relative z-10 mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--lime)] hover:underline"
-                    >
-                      All services <ArrowUpRight size={14} />
-                    </Link>
-                  </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
-                    {services.map((s) => (
-                      <Link
-                        key={s.slug}
-                        href={`/services/${s.slug}`}
-                        onClick={() => setServicesOpen(false)}
-                        className="group rounded-xl p-3 transition-all duration-200 hover:bg-black/[0.04]"
-                      >
-                        <div className="flex items-center justify-between">
-                          <span className="mono text-[9px] text-black/40">{s.number}</span>
-                          <ArrowUpRight
-                            size={13}
-                            className="text-black/30 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                          />
-                        </div>
-                        <p className="mt-1.5 text-xs sm:text-sm font-semibold tracking-[-.02em] text-[var(--ink)]">
-                          {s.navName || s.name}
-                        </p>
-                        <p className="mt-0.5 line-clamp-1 text-[11px] leading-4 text-black/55">{s.short}</p>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
           </nav>
 
           <div className="flex items-center gap-2">
@@ -163,6 +111,58 @@ export function SiteHeader() {
             </button>
           </div>
         </div>
+
+        {/* ── Services Mega Dropdown (Fluid Ratio Positioned under Header Container) ── */}
+        {servicesOpen && (
+          <div
+            className="dropdown-enter dropdown-panel absolute left-1/2 top-[calc(100%+10px)] z-50 w-[min(94%,760px)] max-h-[calc(100vh-90px)] -translate-x-1/2 overflow-y-auto rounded-[28px] border border-black/10 bg-[#fcfcf9] p-4 sm:p-5 shadow-[0_28px_80px_rgba(5,16,36,0.22)]"
+            onMouseEnter={openDropdown}
+            onMouseLeave={closeDropdown}
+          >
+            <div className="absolute -top-4 left-0 right-0 h-4" />
+            <div className="grid grid-cols-1 md:grid-cols-[.65fr_1.35fr] gap-3">
+              <div className="flex flex-col justify-between rounded-2xl bg-[var(--ink)] p-5 text-white relative overflow-hidden">
+                <div className="absolute -right-16 -top-16 h-40 w-40 rounded-full bg-[var(--blue)]/30 blur-2xl pointer-events-none" />
+                <div className="relative z-10">
+                  <span className="mono text-[9px] text-white/50">Capabilities / 07</span>
+                  <h3 className="display mt-3 text-3xl sm:text-4xl leading-[.92]">Build the next move.</h3>
+                  <p className="mt-3 text-xs leading-5 text-white/65">
+                    From digital foundations to demand generation and strategic leadership.
+                  </p>
+                </div>
+                <Link
+                  href="/services"
+                  onClick={() => setServicesOpen(false)}
+                  className="relative z-10 mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--lime)] hover:underline"
+                >
+                  All services <ArrowUpRight size={14} />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-1.5">
+                {services.map((s) => (
+                  <Link
+                    key={s.slug}
+                    href={`/services/${s.slug}`}
+                    onClick={() => setServicesOpen(false)}
+                    className="group rounded-xl p-3 transition-all duration-200 hover:bg-black/[0.04]"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="mono text-[9px] text-black/40">{s.number}</span>
+                      <ArrowUpRight
+                        size={13}
+                        className="text-black/30 opacity-0 transition-all duration-200 group-hover:opacity-100 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      />
+                    </div>
+                    <p className="mt-1.5 text-xs sm:text-sm font-semibold tracking-[-.02em] text-[var(--ink)]">
+                      {s.navName || s.name}
+                    </p>
+                    <p className="mt-0.5 line-clamp-1 text-[11px] leading-4 text-black/55">{s.short}</p>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Mobile Navigation Menu ── */}
         {menu && (
