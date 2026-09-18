@@ -1,8 +1,9 @@
 'use client';
 
-import { ArrowRight, Check, ChevronLeft, LoaderCircle, Sparkles } from 'lucide-react';
+import { ArrowRight, Check, ChevronLeft, LoaderCircle, Sparkles, AlertCircle } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useRouter } from 'next/navigation';
 
 const options = [
   'Website Development',
@@ -16,8 +17,10 @@ const options = [
 ];
 
 export function LeadForm({ compact = false, initialService = '' }: { compact?: boolean; initialService?: string }) {
+  const router = useRouter();
   const [step, setStep] = useState(0);
   const [status, setStatus] = useState<'idle' | 'loading' | 'done' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
   const [data, setData] = useState({
     name: '',
     email: '',
@@ -28,16 +31,24 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
     contact: 'Email',
   });
   const [hp, setHp] = useState('');
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
+
+  const emailValid = useMemo(() => /\S+@\S+\.\S+/.test(data.email), [data.email]);
+  const nameValid = useMemo(() => data.name.trim().length > 0, [data.name]);
 
   const valid = useMemo(() => {
-    if (step === 0) return data.name.trim() !== '' && /\S+@\S+\.\S+/.test(data.email);
+    if (step === 0) return nameValid && emailValid;
     if (step === 1) return data.services.length > 0;
     if (step === 2) return data.message.trim().length >= 8;
     return true;
-  }, [data, step]);
+  }, [data, step, nameValid, emailValid]);
 
   function update(k: string, v: any) {
     setData((d) => ({ ...d, [k]: v }));
+  }
+
+  function blur(k: string) {
+    setTouched((t) => ({ ...t, [k]: true }));
   }
 
   function toggleService(option: string) {
@@ -52,6 +63,7 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
 
   async function submit() {
     setStatus('loading');
+    setErrorMessage('');
     try {
       const r = await fetch('/api/contact', {
         method: 'POST',
@@ -62,14 +74,16 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
           websiteField: hp,
         }),
       });
-      if (!r.ok) throw new Error();
+      if (!r.ok) throw new Error('Submission failed');
       setStatus('done');
-    } catch {
+      router.push('/thank-you');
+    } catch (e: any) {
       setStatus('error');
+      setErrorMessage('We could not send your brief at this moment. Please check your network or try again.');
     }
   }
 
-  if (status === 'done')
+  if (status === 'done') {
     return (
       <div 
         className="relative overflow-hidden rounded-[32px] border border-white/20 bg-[var(--ink)] p-8 sm:p-12 backdrop-blur-2xl shadow-[0_32px_90px_rgba(0,0,0,0.55)]"
@@ -80,14 +94,15 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
           <div className="grid h-16 w-16 place-items-center rounded-2xl bg-[var(--lime)] text-[var(--ink)] shadow-[0_0_30px_rgba(216,242,107,0.4)]">
             <Check size={28} strokeWidth={3} />
           </div>
-          <p className="mono mt-8 text-xs tracking-widest text-white/60">Enquiry received</p>
-          <h3 className="display mt-3 text-4xl sm:text-5xl leading-[.9] text-white">Good. Let's make the next move useful.</h3>
+          <p className="mono mt-8 text-xs tracking-widest text-white/60">ENQUIRY CONFIRMED</p>
+          <h3 className="display mt-3 text-4xl sm:text-5xl leading-[.9] text-white">Good. Let's make the next move count.</h3>
           <p className="mt-5 max-w-lg text-sm sm:text-base leading-7 text-white/75">
-            Thanks for the context. BizNiti will follow up directly with structured analysis rather than a generic sales deck.
+            Thanks for the context. We are reviewing your project goals and will respond directly with structured analysis.
           </p>
         </div>
       </div>
     );
+  }
 
   return (
     <div
@@ -158,10 +173,35 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
                   </h3>
                 </div>
                 <div className="grid gap-4 sm:grid-cols-2 pt-2">
-                  <Field label="Name *" value={data.name} onChange={(v) => update('name', v)} placeholder="Jane Doe" />
-                  <Field label="Work email *" type="email" value={data.email} onChange={(v) => update('email', v)} placeholder="jane@company.com" />
-                  <Field label="Company" value={data.company} onChange={(v) => update('company', v)} placeholder="Acme Inc" />
-                  <Field label="Website" value={data.website} onChange={(v) => update('website', v)} placeholder="https://company.com" />
+                  <Field
+                    label="Name *"
+                    value={data.name}
+                    onChange={(v) => update('name', v)}
+                    onBlur={() => blur('name')}
+                    error={touched.name && !nameValid ? 'Name is required' : ''}
+                    placeholder="Jane Doe"
+                  />
+                  <Field
+                    label="Work email *"
+                    type="email"
+                    value={data.email}
+                    onChange={(v) => update('email', v)}
+                    onBlur={() => blur('email')}
+                    error={touched.email && !emailValid ? 'Valid email required (e.g. jane@company.com)' : ''}
+                    placeholder="jane@company.com"
+                  />
+                  <Field
+                    label="Company"
+                    value={data.company}
+                    onChange={(v) => update('company', v)}
+                    placeholder="Acme Inc"
+                  />
+                  <Field
+                    label="Website"
+                    value={data.website}
+                    onChange={(v) => update('website', v)}
+                    placeholder="https://company.com"
+                  />
                 </div>
               </div>
             )}
@@ -233,6 +273,9 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
                   placeholder="The clearer the context, the better the first conversation..."
                   className="mt-8 w-full resize-none rounded-2xl border border-white/20 bg-white/10 p-5 text-sm leading-6 text-white placeholder:text-white/40 focus:border-[var(--lime)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--lime)]/30 transition-all duration-300"
                 />
+                {data.message.length > 0 && data.message.length < 8 && (
+                  <p className="mt-2 text-xs text-amber-300">Please provide a little more detail (at least 8 characters).</p>
+                )}
               </div>
             )}
 
@@ -305,9 +348,10 @@ export function LeadForm({ compact = false, initialService = '' }: { compact?: b
       </div>
 
       {status === 'error' && (
-        <p className="relative z-10 mt-4 text-xs font-semibold text-red-400">
-          We couldn't send that just now. Please check details and try again.
-        </p>
+        <div className="relative z-10 mt-4 flex items-center gap-2 rounded-xl border border-red-500/40 bg-red-500/10 p-3 text-xs font-semibold text-red-300">
+          <AlertCircle size={16} className="shrink-0 text-red-400" />
+          <span>{errorMessage}</span>
+        </div>
       )}
     </div>
   );
@@ -317,24 +361,36 @@ function Field({
   label,
   value,
   onChange,
+  onBlur,
+  error,
   type = 'text',
   placeholder = '',
 }: {
   label: string;
   value: string;
   onChange: (v: string) => void;
+  onBlur?: () => void;
+  error?: string;
   type?: string;
   placeholder?: string;
 }) {
   return (
     <label className="grid gap-2 text-xs font-medium">
-      <span className="text-white/80 font-medium">{label}</span>
+      <div className="flex items-center justify-between">
+        <span className="text-white/80 font-medium">{label}</span>
+        {error && <span className="text-red-400 text-[10px] font-semibold">{error}</span>}
+      </div>
       <input
         type={type}
         value={value}
         onChange={(e) => onChange(e.target.value)}
+        onBlur={onBlur}
         placeholder={placeholder}
-        className="rounded-2xl border border-white/20 bg-white/10 px-4 py-3.5 text-sm text-white placeholder:text-white/40 focus:border-[var(--lime)] focus:bg-white/15 focus:outline-none focus:ring-2 focus:ring-[var(--lime)]/30 transition-all duration-300"
+        className={`rounded-2xl border px-4 py-3.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 transition-all duration-300 ${
+          error
+            ? 'border-red-500/60 bg-red-500/10 focus:border-red-400 focus:ring-red-400/30'
+            : 'border-white/20 bg-white/10 focus:border-[var(--lime)] focus:bg-white/15 focus:ring-[var(--lime)]/30'
+        }`}
       />
     </label>
   );

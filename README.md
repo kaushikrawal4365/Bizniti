@@ -37,5 +37,7 @@ Copy `.env.example` to `.env.local` and set the keys for Supabase/Resend when ba
 - **Header Clearance for System Progress Bar**: Offset the sticky progress indicator bar (`top-[84px] sm:top-[92px]`) in `HorizontalStory` so "The BizNiti System 01/05" indicator sits cleanly below the fixed top navbar header without any overlap.
 - **Mobile & Tablet 3D Card Deck Stacking**: Transformed `HorizontalStory` on phone and tablet devices into a sticky 3D card deck stack where cards layer vertically with peek-a-boo step headers as the user scrolls.
 - **Mobile Touch-Optimized Inline Service Accordions**: Refactored `ServicesExperience` ("Seven ways to move") on touch screens so tapping any service expands its rich dark-glass preview card inline directly under the user's finger.
+- **20 Essential Production & Safety Upgrades**: Integrated custom 404 recovery route (`/not-found`), Next.js dynamic `robots.ts` & `sitemap.ts`, dynamic `opengraph-image` generator, SVG/Apple favicon suite, persistent `StickyMobileCTA`, `CookieBanner` with local storage state, `@vercel/analytics` integration, `/thank-you` confirmation page, production-grade `/privacy` policy & `/terms` conditions, global loading state (`app/loading.tsx`), enhanced form validation/error feedback on `LeadForm`, and verified office contact location details.
+
 
 
